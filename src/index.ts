@@ -1,7 +1,7 @@
 import {createContract, wallet} from "./service";
 import {AbiEnum, AbiList} from "./abiList";
+require('dotenv').config({ path: '../.env' })
 
-require("dotenv").config()
 const { ethers } = require("ethers")
 const fs = require("fs")
 

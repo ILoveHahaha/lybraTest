@@ -3,14 +3,15 @@ import {AbiList} from "./abiList"
 import fs from 'fs'
 import path from 'path'
 import {ContractObj, FileObj} from "./types";
-import {ethers} from "ethers";
+import {JsonRpcProvider, Wallet, Contract} from "ethers";
+require('dotenv').config({ path: '../.env' })
 
 const ABIPATH = '../abi'
 
 // 注册器
-export const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL)
+export const provider = new JsonRpcProvider(process.env.RPC_URL)
 // 钱包
-export const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
+// export const wallet = new Wallet(process.env.PRIVATE_KEY || '', provider)
 
 // 判定是否没有json文件
 export const isNonEmptyJsonFileSync = (folderPath: string, fileName: string): Boolean => {
@@ -30,7 +31,7 @@ export const isNonEmptyJsonFileSync = (folderPath: string, fileName: string): Bo
 
 // 写入abi，有的话就不写入了
 export const writeABi = () => {
-    const promiseList = []
+    const promiseList: Array<Promise<unknown>> = []
     AbiList.forEach(value => {
         const result = isNonEmptyJsonFileSync(ABIPATH, value.key)
         if (!result) {
@@ -55,9 +56,9 @@ export const createContract = async () => {
                 const path: string = `${ABIPATH}/${value}`
                 const key = value.split('.')[0]
                 const address = AbiList.find(val => val.key === key)
-                fileObj[key] = JSON.parse(fs.readFileSync(path))
+                fileObj[key] = JSON.parse(fs.readFileSync(path, 'utf-8'))
                 if (address) {
-                    contractObj[key] = new ethers.Contract(address?.address, fileObj[key], provider)
+                    contractObj[key] = new Contract(address?.address || '', fileObj[key], provider)
                 }
             })
 
