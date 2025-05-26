@@ -11,7 +11,7 @@ const ABIPATH = '../abi'
 // 注册器
 export const provider = new JsonRpcProvider(process.env.RPC_URL)
 // 钱包
-// export const wallet = new Wallet(process.env.PRIVATE_KEY || '', provider)
+export const wallet = new Wallet(process.env.PRIVATE_KEY || '', provider)
 
 // 判定是否没有json文件
 export const isNonEmptyJsonFileSync = (folderPath: string, fileName: string): Boolean => {
@@ -43,7 +43,7 @@ export const writeABi = () => {
 }
 
 // 生成合约
-export const createContract = async () => {
+export const createContract = async (): Promise<ContractObj | Error> => {
     return new Promise((resolve, reject) => {
         writeABi().then(() => {
             // 文件对象

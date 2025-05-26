@@ -12,7 +12,8 @@ export const AbiList = [
     },
     {
         key: AbiEnum.STETH,
-        address: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84'
+        proxy_address: '0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84',
+        address: '0x17144556fd3424edc8fc8a4c940b2d04936d17eb'
     },
     {
         key: AbiEnum.EUSD,

@@ -1,25 +1,17 @@
 import {createContract, wallet} from "./service";
 import {AbiEnum, AbiList} from "./abiList";
+import {ContractObj} from "./types";
 require('dotenv').config({ path: '../.env' })
 
-const { ethers } = require("ethers")
+const { Contract } = require("ethers")
 const fs = require("fs")
 
-// 读取 ABI
-// const lybraAbi = JSON.parse(fs.readFileSync("./abi/Lybra.json"))
-// const erc20Abi = JSON.parse(fs.readFileSync("./abi/stETH.json"))
-//
-// const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL)
-// const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
-//
-// const lybraContract = new ethers.Contract(process.env.LYBRA_ADDRESS, lybraAbi, provider)
-// const stethContract = new ethers.Contract(process.env.STETH_ADDRESS, erc20Abi, provider)
 
 // 上次检查到的余额
-let lastBalance = ethers.BigNumber.from("0")
+let lastBalance = 0n
 
 async function checkBalanceAndExecute() {
-    createContract().then(async (res) => {
+    createContract().then(async (res: ContractObj) => {
         const LYBRA_ADDRESS = AbiList.find(value => value.key === AbiEnum.STETH)
         const balance = await res[AbiEnum.STETH].balanceOf(LYBRA_ADDRESS?.address)
 
@@ -28,7 +20,7 @@ async function checkBalanceAndExecute() {
             lastBalance = balance
 
             // 调用套利合约
-            const arbitrageContract = new ethers.Contract(
+            const arbitrageContract = new Contract(
                 process.env.ARBITRAGE_CONTRACT_ADDRESS,
                 ["function executeArbitrage() external"], // 简化版 ABI
                 wallet

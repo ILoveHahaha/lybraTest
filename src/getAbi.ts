@@ -36,5 +36,4 @@ export const saveAbi = async (name: string, address: string) => {
             reject(e)
         }
     })
-
 }
